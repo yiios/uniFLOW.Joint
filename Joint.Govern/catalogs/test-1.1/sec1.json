@@ -1,0 +1,11 @@
+{
+  "Label": "section 1",
+  "items": [
+    {
+      "Key": "Sec1:Key1",
+      "Label": "item 1",
+      "Description": "item 1 is for item 1.",
+      "DefaultText": ""
+    }
+  ]
+}
