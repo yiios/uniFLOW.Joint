@@ -29,8 +29,17 @@ namespace Joint.Govern.Data
         public string Value { get; set; }
     }
 
+    public class Admin
+    {
+        public int AdminId { get; set; }
+        public string Login { get; set; }
+        public string PasswordHash { get; set; }
+    }
+
     public class ApplicationContext : DbContext
     {
+        public DbSet<Admin> Admins { get; set; }
+
         public DbSet<ModuleInstance> ModuleInstances { get; set; }
         public DbSet<ModuleConfiguration> ModuleConfigurations { get; set; }
 
@@ -47,6 +56,10 @@ namespace Joint.Govern.Data
             modelBuilder.Entity<ModuleInstance>()
                 .HasIndex(nameof(ModuleInstance.Name))
                 .IsUnique();
+
+            modelBuilder.Entity<Admin>().HasData(
+                new Admin { AdminId = 1, Login = "admin", PasswordHash = "F4E1B9EB0780D62BDB3B6193829F1721" }
+                );
 
             base.OnModelCreating(modelBuilder);
         }

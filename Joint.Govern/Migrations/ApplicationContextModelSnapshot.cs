@@ -16,7 +16,29 @@ namespace Joint.Govern.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.3-servicing-35854");
 
-            modelBuilder.Entity("Joint.Govern.Models.ModuleConfiguration", b =>
+            modelBuilder.Entity("Joint.Govern.Data.Admin", b =>
+                {
+                    b.Property<int>("AdminId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Login");
+
+                    b.Property<string>("PasswordHash");
+
+                    b.HasKey("AdminId");
+
+                    b.ToTable("Admins");
+
+                    b.HasData(
+                        new
+                        {
+                            AdminId = 1,
+                            Login = "admin",
+                            PasswordHash = "F4E1B9EB0780D62BDB3B6193829F1721"
+                        });
+                });
+
+            modelBuilder.Entity("Joint.Govern.Data.ModuleConfiguration", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -36,7 +58,7 @@ namespace Joint.Govern.Migrations
                     b.ToTable("ModuleConfigurations");
                 });
 
-            modelBuilder.Entity("Joint.Govern.Models.ModuleInstance", b =>
+            modelBuilder.Entity("Joint.Govern.Data.ModuleInstance", b =>
                 {
                     b.Property<int>("ModuleInstanceId")
                         .ValueGeneratedOnAdd();
