@@ -25,7 +25,12 @@ namespace Joint.Govern.Services
 
     public interface IModuleCatalogManager
     {
-        
+        ICollection<ConfigCatalog> Catalogs { get; }
+        ICollection<ModuleIdentifier> Modules { get; }
+        ConfigCatalog GetCompatibleCatalog(ModuleIdentifier module);
+        ConfigCatalog GetCatalog(ModuleIdentifier module);
+        bool HasCompatibleCatalog(ModuleIdentifier module);
+        Task LoadModuleCatalogCache(bool force = false);
     }
 
     public interface IModuleCatalogProvider
@@ -67,6 +72,36 @@ namespace Joint.Govern.Services
 
         IDictionary<ModuleIdentifier, ConfigCatalog> catalogCache;
         public ICollection<ConfigCatalog> Catalogs => catalogCache.Values;
+        public ICollection<ModuleIdentifier> Modules => catalogCache.Keys;
+
+        public Task LoadModuleCatalogCache(bool force)
+        {
+            if (force || catalogCache.Count == 0)
+                return Task.Run(() => LoadModules());
+            return Task.CompletedTask;
+        }
+        public bool HasCompatibleCatalog(ModuleIdentifier module)
+        {
+            if (catalogCache.ContainsKey(module)) return true;
+            return catalogCache.Keys.Any(
+                m => string.Compare(m.Name, module.Name,
+                    StringComparison.OrdinalIgnoreCase) == 0 &&
+                    m.Version.Major == module.Version.Major);
+        }
+
+        public ConfigCatalog GetCompatibleCatalog(ModuleIdentifier module)
+        {
+            if (catalogCache.TryGetValue(module, out var catalog))
+                return catalog;
+            var found = catalogCache.Keys
+                .Where(m => string.Compare(m.Name, module.Name,
+                    StringComparison.OrdinalIgnoreCase) == 0)
+                .OrderByDescending(m => m.Version)
+                .FirstOrDefault(m => m.Version.Major == module.Version.Major);
+            return catalogCache.TryGetValue(found, out catalog) ? catalog : null;
+        }
+        public ConfigCatalog GetCatalog(ModuleIdentifier module)
+            => catalogCache.TryGetValue(module, out var catalog) ? catalog : null;
 
         void LoadModules()
         {
@@ -74,6 +109,12 @@ namespace Joint.Govern.Services
                 .FirstOrDefault(p => p.Mode == optionsMonitor.CurrentValue.Mode);
             Debug.Assert(provider != null);
             var modules = provider.GetAvailableModules();
+            catalogCache.Clear();
+            foreach (var module in modules)
+            {
+                var catalog = provider.LoadCatalogForModule(module);
+                catalogCache.Add(module, catalog);
+            }
         }
     }
 
@@ -113,7 +154,7 @@ namespace Joint.Govern.Services
             }
             foreach (var file in Directory.GetDirectories(dir))
             {
-                var name = Path.GetFileNameWithoutExtension(file);
+                var name = Path.GetFileName(file);
                 if (ModuleIdentifier.TryParse(name, out var identifier))
                     list.Add(identifier);
             }

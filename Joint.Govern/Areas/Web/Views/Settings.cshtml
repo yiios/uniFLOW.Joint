@@ -1,0 +1,23 @@
+﻿@model SettingsViewModel
+
+@using Joint.Govern.ViewModels
+@using Microsoft.Extensions.Configuration;
+@{
+    ViewData["Title"] = "Settings";
+    Layout = "_LayoutAdmin";
+
+    var wxIOTSwitch = bool.TryParse(configuration["WeChat:WxWorkIOT:Switch"], out bool wxWorkIOTSwitch) && wxWorkIOTSwitch;
+}
+@inject IConfiguration configuration
+<h2>设置</h2>
+
+
+    @await Html.PartialAsync("Settings_Common", Model.Common)
+
+    @if (wxIOTSwitch)
+    {
+        @await Html.PartialAsync("Settings_WeChat", Model.WeChat)
+    }
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

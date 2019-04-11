@@ -26,14 +26,42 @@ namespace Joint.Govern.Data
         public int ModuleInstanceId { get; set; }
         [Required]
         public string Key { get; set; }
+        [Required]
         public string Value { get; set; }
     }
 
     public class Admin
     {
         public int AdminId { get; set; }
+        [Required]
         public string Login { get; set; }
+        [Required]
         public string PasswordHash { get; set; }
+    }
+
+    public class Setting
+    {
+        public int Id { get; set; }
+        [Required]
+        public string Key { get; set; }
+        [Required]
+        public string Value { get; set; }
+    }
+
+    public class LicenseKey
+    {
+        public int Id { get; set; }
+        [Required]
+        public string KeyCode { get; set; }
+        [Required]
+        public string Module { get; set; }
+
+        public int? ModuleInstanceId { get; set; }
+        public int? Capacity { get; set; }
+        public DateTime? IssueDate { get; set; }
+        public DateTime? ExpireDate { get; set; }
+
+        public string Remarks { get; set; }
     }
 
     public class ApplicationContext : DbContext
@@ -42,6 +70,9 @@ namespace Joint.Govern.Data
 
         public DbSet<ModuleInstance> ModuleInstances { get; set; }
         public DbSet<ModuleConfiguration> ModuleConfigurations { get; set; }
+
+        public DbSet<Setting> Settings { get; set; }
+        public DbSet<LicenseKey> LicenseKeys { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)

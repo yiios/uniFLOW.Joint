@@ -1,0 +1,47 @@
+﻿@using UniFlowGW.Controllers;
+
+@{
+    ViewData["Title"] = "打印历史";
+    Layout = "_LayoutFront";
+    var loginId = Context.Session.GetLdapLoginId();
+}
+
+@inject DatabaseContext ctx
+
+@{
+    <h3>@ViewData["Title"]</h3>
+
+    var tasks = from t in ctx.PrintTasks
+                where t.UserID.ToLower() == loginId.ToLower()
+                orderby t.Time descending
+                select t;
+
+    <ul class="list-group">
+        @foreach (var task in tasks.Take(10))
+        {
+            var st = "";
+            switch (task.Status)
+            {
+                case PrintTaskStatus.Committed: st = "success"; break;
+                case PrintTaskStatus.Failed: st = "danger"; break;
+                case PrintTaskStatus.Processing: st = "info"; break;
+                default: break;
+            }
+
+        <li class="list-group-item list-group-item-@st">
+            <h4 class="text-overflow">@task.Document</h4>
+            <small>@task.Time</small> - @task.Status.GetDisplayName() <br />
+            份数: @task.PrintModel.Copies |
+            颜色模式: @Html.DisplayFor(m => task.PrintModel.ColorMode) |
+            页面尺寸: @Html.DisplayFor(m => task.PrintModel.PaperSize) |
+            装订模式: @Html.DisplayFor(m => task.PrintModel.PaperMode)
+            @if (task.Status == PrintTaskStatus.Failed)
+            {
+                <p>错误消息: @task.Message</p>
+            }
+        </li>
+        }
+
+    </ul>
+
+}

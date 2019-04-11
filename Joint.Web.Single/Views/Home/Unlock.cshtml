@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "扫码开机结果";
+    Layout = "_LayoutFront";
+}
+
+
+
+<h2>@ViewData["Title"]</h2>
+
+@if ((bool)ViewBag.Result)
+{
+    <p>开机成功，您可以操作打印机完成打印。</p>
+}
+else
+{
+    <p>开机失败，请稍候再试。</p>
+}

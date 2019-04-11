@@ -1,0 +1,145 @@
+﻿@model PrintViewModel
+@using UniFlowGW.Controllers;
+@using Microsoft.Extensions.Configuration;
+@{
+    ViewData["Title"] = "上传文档打印";
+
+    var printerSN = Context.Session.GetCurrentPrinterSN();
+    bool hasPrinter = !string.IsNullOrEmpty(printerSN);
+    var loginId = Context.Session.GetLdapLoginId();
+    var fileUploadSwitch = configuration["ModuleSwitch:FileUpload"];
+}
+@inject IConfiguration configuration
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Uniflow GW</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                @if (fileUploadSwitch.Equals("On"))
+                {
+                    <li class="active"><a href="#"><span class="glyphicon glyphicon-cloud-upload"></span> 上传文档打印</a></li>
+                    <li><a asp-action="History" asp-controller="Home"><span class="glyphicon glyphicon-time"></span> 打印历史</a></li>
+                }
+                <li>
+                    <a href="#">
+                        <span class="glyphicon glyphicon-print"></span> 打印机
+                        @if (hasPrinter)
+                        {
+                            Write($"[{printerSN}]");
+                        }
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <i class="glyphicon glyphicon-user"></i> @loginId
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a asp-action="UnBind" class="unbind" onclick="return confirm('您确定要解绑吗?')"><span class="glyphicon  glyphicon-log-out"></span> 解绑</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+<form asp-controller="Home" role="form" asp-action="Result" method="post" enctype="multipart/form-data" class="form-horizontal">
+    <div class="form-group">
+        <label asp-for="Document" class="col-xs-3 col-sm-2 control-label">文件: </label>
+        <div class="col-xs-9 col-sm-10">
+            <input type="file" asp-for="Document" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="Copies" class="col-xs-3 col-sm-2 control-label">@Html.DisplayNameFor(m => m.Copies): </label>
+        <div class="input-group quantity-wrapper col-xs-6 col-sm-8">
+
+            <span class="input-group-addon quantity-remove btn">
+                <span class="glyphicon glyphicon-minus"></span>
+            </span>
+
+            <input id="Copies" type="text" value="@Model.Copies" name="@nameof(@Model.Copies)" class="form-control quantity-count" placeholder="1">
+
+            <span class="input-group-addon quantity-add btn">
+                <span class="glyphicon glyphicon-plus"></span>
+            </span>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="ColorMode" class="col-xs-3 col-sm-2 control-label">@Html.DisplayNameFor(m => m.ColorMode): </label>
+        <div class="btn-group" data-toggle="buttons">
+            @foreach (ColorMode val in Enum.GetValues(typeof(ColorMode)))
+            {
+                var active = Model.ColorMode == val ? "active" : "";
+                var checked_ = Model.ColorMode == val ? "checked" : "";
+                <label class="btn btn-danger @active">
+                    <input type="radio" name="@nameof(Model.ColorMode)" id="ColorMode" autocomplete="off" @checked_ value="@val">
+                    @val.GetDisplayName()
+                </label>
+            }
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="ColorMode" class="col-xs-3 col-sm-2 control-label">@Html.DisplayNameFor(m => m.PaperSize): </label>
+        <div class="btn-group" data-toggle="buttons">
+            @foreach (PaperSize val in Enum.GetValues(typeof(PaperSize)))
+            {
+                var active = Model.PaperSize == val ? "active" : "";
+                var checked_ = Model.PaperSize == val ? "checked" : "";
+                <label class="btn btn-danger @active">
+                    <input type="radio" name="@nameof(Model.PaperSize)" id="PaperSize" autocomplete="off" @checked_ value="@val">
+                    @val.GetDisplayName()
+                </label>
+            }
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="Orientation" class="col-xs-3 col-sm-2 control-label">@Html.DisplayNameFor(m => m.Orientation): </label>
+        <div class="btn-group" data-toggle="buttons">
+            @foreach (Orientation val in Enum.GetValues(typeof(Orientation)))
+            {
+                var active = Model.Orientation == val ? "active" : "";
+                var checked_ = Model.Orientation == val ? "checked" : "";
+                <label class="btn btn-danger @active">
+                    <input type="radio" name="@nameof(Model.Orientation)" id="Orientation" autocomplete="off" @checked_ value="@val">
+                    @val.GetDisplayName()
+                </label>
+            }
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="PaperMode" class="col-xs-3 col-sm-2 control-label">@Html.DisplayNameFor(m => m.PaperMode): </label>
+        <div class="btn-group" data-toggle="buttons">
+            @foreach (PaperMode val in Enum.GetValues(typeof(PaperMode)))
+            {
+                var active = Model.PaperMode == val ? "active" : "";
+                var checked_ = Model.PaperMode == val ? "checked" : "";
+                <label class="btn btn-danger @active">
+                    <input type="radio" name="@nameof(Model.PaperMode)" id="PaperMode" autocomplete="off" @checked_ value="@val">
+                    @val.GetDisplayName()
+                </label>
+            }
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-xs-3 col-sm-2"></label>
+        <div class="col-xs-6 col-sm-8">
+            <button type="submit" class="btn btn-danger btn-lg btn-block">上 传</button>
+        </div>
+    </div>
+</form>

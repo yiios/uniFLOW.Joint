@@ -1,0 +1,63 @@
+﻿@using UniFlowGW.Controllers;
+@{
+    var adminLogin = Context.Session.GetAdminLoginUser();
+}
+<!DOCTYPE html>
+<html>
+<partial name="_Header" />
+<body>
+    <nav class="navbar navbar-inverse navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a asp-area="" asp-controller="Admin" asp-action="Index" class="navbar-brand">
+                    uniFLOW 扫码服务
+                </a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a asp-area="" asp-controller="Admin" asp-action="Account"><span class="glyphicon glyphicon-user"></span> 用户管理</a></li>
+                    <li><a asp-area="" asp-controller="Admin" asp-action="LicenseState">License管理</a></li>
+                    <li><a asp-area="" asp-controller="Admin" asp-action="PrintRecord"><span class="glyphicon glyphicon-print"></span> 打印历史</a></li>
+                    <li><a asp-area="" asp-controller="Admin" asp-action="SettingsCommon"><i class="glyphicon glyphicon-cog"></i> 设置</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-user"></span> @adminLogin
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a asp-area="" asp-controller="Admin" asp-action="ChangePassword"><span class="glyphicon glyphicon-edit"></span> 修改密码</a>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            <li>
+                                <a asp-area="" asp-controller="Admin" asp-action="Logout"><span class="glyphicon glyphicon-log-out"></span>退出</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <partial name="_CookieConsentPartial" />
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <partial name="_Footer" />
+    </div>
+
+    @RenderSection("Scripts", required: false)
+
+
+</body>
+</html>

@@ -13,6 +13,7 @@ namespace Joint.Core.Govern
     {
         public string Name { get; set; }
         public Version Version { get; set; }
+
         public override string ToString() => Name + "-" + Version;
         public override int GetHashCode()
             => Name.ToLowerInvariant().GetHashCode() ^ Version.GetHashCode();

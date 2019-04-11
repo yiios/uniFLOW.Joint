@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "解绑结果";
+    Layout = "_LayoutFront";
+}
+
+
+
+<h2>@ViewData["Title"]</h2>
+
+@if ((bool)ViewBag.Result)
+{
+<p>解绑成功。请重新扫描打印机二维码。</p>
+}
+else
+{
+<p>解绑失败，请稍候再试。</p>
+}

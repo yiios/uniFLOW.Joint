@@ -1,0 +1,51 @@
+﻿@using Microsoft.Extensions.Configuration;
+@using Joint.Govern.ViewModels
+@model CommonSettingsViewModel
+
+@{
+    ViewData["Title"] = "设置";
+    Layout = "_LayoutAdmin";
+}
+@inject IConfiguration configuration
+
+<h2>@ViewData["Title"]</h2>
+
+@await Html.PartialAsync("_StatusMessage", Model.StatusMessage)
+<form method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="panel panel-default">
+        <ul id="settingsTab" class="nav nav-tabs">
+            <li class="active"><a asp-area="" asp-controller="Admin" asp-action="SettingsCommon">uniFLOW设置</a></li>
+            @if (bool.TryParse(configuration["WeChat:WxWorkIOT:Switch"], out bool wxWorkIOTSwitch) && wxWorkIOTSwitch)
+            {
+                <li><a asp-area="" asp-controller="Admin" asp-action="SettingsWeChat">企业微信设置</a></li>
+            }
+        </ul>
+        <div class="panel-body">
+            <div class="form-group">
+                <label asp-for="UniflowDBHost"></label>
+                <input asp-for="UniflowDBHost" class="form-control" placeholder="uniFLOW服务器Host" />
+            </div>
+            <div class="form-group">
+                <label asp-for="UniflowServiceEncryptKey"></label>
+                <input asp-for="UniflowServiceEncryptKey" class="form-control" placeholder="uniFLOW服务系统密钥" />
+            </div>
+            <div class="form-group">
+                <label asp-for="UniflowServiceTaskTargetPath"></label>
+                <input asp-for="UniflowServiceTaskTargetPath" class="form-control" placeholder="共享打印目录" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="UniflowUncUser"></label>
+                <input asp-for="UniflowUncUser" class="form-control" placeholder="访问Hot目录的用户名" />
+            </div>
+            <div class="form-group">
+                <label asp-for="UniflowUncPassword"></label>
+                <input asp-for="UniflowUncPassword" class="form-control" placeholder="访问Hot目录的用户密码" />
+            </div>
+        </div>
+    </div>
+    <div class="">
+        <button type="submit" class="btn btn-primary btn-lg btn-block">保存</button>
+    </div>
+</form>

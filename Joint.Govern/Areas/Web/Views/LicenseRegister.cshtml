@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "注册授权码";
+    Layout = "_LayoutAdmin";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="row">
+    <div class="col-md-6">
+
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="input-group">
+                <input id="key" name="key" class="form-control" maxlength="25" required />
+                <div class="text-info"> *授权码不需要输入'-'字符。</div>
+            </div>
+            <button type="submit" class="btn btn-primary">注册授权码</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

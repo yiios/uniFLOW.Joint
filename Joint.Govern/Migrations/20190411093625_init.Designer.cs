@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Joint.Govern.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20190411041325_add-admin")]
-    partial class addadmin
+    [Migration("20190411093625_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,9 +23,11 @@ namespace Joint.Govern.Migrations
                     b.Property<int>("AdminId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Login");
+                    b.Property<string>("Login")
+                        .IsRequired();
 
-                    b.Property<string>("PasswordHash");
+                    b.Property<string>("PasswordHash")
+                        .IsRequired();
 
                     b.HasKey("AdminId");
 
@@ -40,6 +42,32 @@ namespace Joint.Govern.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Joint.Govern.Data.LicenseKey", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("Capacity");
+
+                    b.Property<DateTime?>("ExpireDate");
+
+                    b.Property<DateTime?>("IssueDate");
+
+                    b.Property<string>("KeyCode")
+                        .IsRequired();
+
+                    b.Property<string>("Module")
+                        .IsRequired();
+
+                    b.Property<int?>("ModuleInstanceId");
+
+                    b.Property<string>("Remarks");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LicenseKeys");
+                });
+
             modelBuilder.Entity("Joint.Govern.Data.ModuleConfiguration", b =>
                 {
                     b.Property<int>("Id")
@@ -50,7 +78,8 @@ namespace Joint.Govern.Migrations
 
                     b.Property<int>("ModuleInstanceId");
 
-                    b.Property<string>("Value");
+                    b.Property<string>("Value")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -85,6 +114,22 @@ namespace Joint.Govern.Migrations
                         .IsUnique();
 
                     b.ToTable("ModuleInstances");
+                });
+
+            modelBuilder.Entity("Joint.Govern.Data.Setting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Key")
+                        .IsRequired();
+
+                    b.Property<string>("Value")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Settings");
                 });
 #pragma warning restore 612, 618
         }

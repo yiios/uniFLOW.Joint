@@ -5,6 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190402055533_first.cs" />
+    <Compile Remove="Migrations\20190402055533_first.Designer.cs" />
+    <Compile Remove="Migrations\20190411041325_add-admin.cs" />
+    <Compile Remove="Migrations\20190411041325_add-admin.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Areas\Web\Views\Account.cshtml" />
+    <Content Remove="Areas\Web\Views\PrintRecord.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Areas\Api\Data\" />
     <Folder Include="Areas\Api\Models\" />
     <Folder Include="Areas\Api\Views\" />
@@ -24,6 +36,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Joint.Core\Joint.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Licensing">
+      <HintPath>..\..\UniflowGW\UniflowGW\Licensing\bin\Release\netstandard2.0\Licensing.dll</HintPath>
+    </Reference>
+    <Reference Include="Licensing.Common">
+      <HintPath>..\..\UniflowGW\UniflowGW\Licensing\bin\Release\netstandard2.0\Licensing.Common.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
