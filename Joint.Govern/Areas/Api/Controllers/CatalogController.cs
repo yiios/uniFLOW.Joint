@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
+/// <summary>
+/// list, member, get
+/// </summary>
 namespace Joint.Govern.Areas.Api.Controllers
 {
     [Area("Api")]
@@ -48,7 +51,7 @@ namespace Joint.Govern.Areas.Api.Controllers
         {
             if (!ModuleIdentifier.TryParse(ns, out var module))
             {
-                logger.LogDebug("invalid module name");
+                logger.LogDebug("invalid module");
                 return BadRequest();
             }
             await moduleCatalogManager.LoadModuleCatalogCache();
@@ -65,7 +68,7 @@ namespace Joint.Govern.Areas.Api.Controllers
         {
             if (!ModuleIdentifier.TryParse(ns, out var module))
             {
-                logger.LogDebug("invalid module name");
+                logger.LogDebug("invalid module");
                 return BadRequest();
             }
             await moduleCatalogManager.LoadModuleCatalogCache();

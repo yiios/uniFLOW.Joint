@@ -13,6 +13,9 @@ using Microsoft.Extensions.Primitives;
 using Joint.Govern.Services;
 using Joint.Core.Govern;
 
+/// <summary>
+/// list, get, create, delete, announce, pick
+/// </summary>
 namespace Joint.Govern.Areas.Api.Controllers
 {
     [Area("Api")]
@@ -34,18 +37,9 @@ namespace Joint.Govern.Areas.Api.Controllers
             this.config = configuration;
             this.context = context;
             this.moduleCatalogManager = moduleCatalogManager;
-            ChangeToken.OnChange(() => config.GetSection("test").GetReloadToken(),() => logger.LogInformation("test changed"));
-        }
-        IDisposable d1, d2, d3;
-
-        class Opt { public PropertyAccessMode x { get; set; } public int y { get; set; } public override string ToString() => $"x = {x}, y = {y}"; }
-        [HttpGet("config")]
-        public ActionResult<string> Config()
-        {
-            var opt = new Opt { x = PropertyAccessMode.Field, y = 6 };
-            config.GetSection("test").Bind(opt);
-
-            return opt.ToString();
+            //ChangeToken.OnChange(
+            //    () => config.GetSection("test").GetReloadToken(),
+            //    () => logger.LogInformation("test changed"));
         }
 
         // GET api/values
@@ -66,7 +60,7 @@ namespace Joint.Govern.Areas.Api.Controllers
             if (string.IsNullOrEmpty(name)) name = "(default)";
             if (!ModuleIdentifier.TryParse(ns, out var module))
             {
-                logger.LogDebug("invalid module name");
+                logger.LogDebug("invalid module");
                 return BadRequest();
             }
             await moduleCatalogManager.LoadModuleCatalogCache();
@@ -97,7 +91,7 @@ namespace Joint.Govern.Areas.Api.Controllers
             if (string.IsNullOrEmpty(name)) name = "(default)";
             if (!ModuleIdentifier.TryParse(ns, out var module))
             {
-                logger.LogDebug("invalid module name");
+                logger.LogDebug("invalid module");
                 return BadRequest();
             }
 
@@ -113,22 +107,31 @@ namespace Joint.Govern.Areas.Api.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public ActionResult GetById(int id)
+        public ActionResult<ModuleInstance> GetById(int id)
         {
             var instance = context.ModuleInstances.Find(id);
             if (instance == null)
-                return NotFound();
-
-            var configuration = context.ModuleConfigurations
-                .Where(cfg => cfg.ModuleInstanceId == id)
-                .ToDictionaryAsync(cfg => cfg.Key, cfg => cfg.Value);
-            return new JsonResult(configuration);
+                return NotFound($"No such module: [{id}]");
+            return instance;
         }
 
-        [HttpGet("{ns}/{name}")]
-        public ActionResult<IEnumerable<string>> GetByName(string ns, string name)
+        [HttpGet("{ns}/{name?}")]
+        public async Task<ActionResult<ModuleInstance>> GetByNameAsync(string ns, string name)
         {
-            return new string[] { ns, name };
+            if (string.IsNullOrEmpty(name)) name = "(default)";
+            if (!ModuleIdentifier.TryParse(ns, out var module))
+            {
+                logger.LogDebug("invalid module");
+                return BadRequest();
+            }
+
+            logger.LogDebug($"Delete {ns}:{name}");
+            var found = await context.ModuleInstances.FirstOrDefaultAsync(
+                m => m.Module == ns.ToLower() && m.Name == name.ToLower()
+            );
+            if (found == null)
+                return NotFound($"No such module: {ns}/{name}");
+            return found;
         }
 
         // GET api/values/5
