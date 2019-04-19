@@ -53,9 +53,9 @@ namespace Joint.Govern.Areas.Api.Controllers
         }
 
         [HttpPut("{ns}/{name?}")]
-        public Task<ActionResult> Create(string ns, string name) => CreateGet(ns, name);
+        public Task<ActionResult> Create(string ns, string name, string ver) => CreateGet(ns, name, ver);
         [HttpGet("create")]
-        public async Task<ActionResult> CreateGet(string ns, string name)
+        public async Task<ActionResult> CreateGet(string ns, string name, string ver)
         {
             if (string.IsNullOrEmpty(name)) name = "(default)";
             if (!ModuleIdentifier.TryParse(ns, out var module))

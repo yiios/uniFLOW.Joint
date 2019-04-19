@@ -14,8 +14,10 @@ namespace Joint.Govern.Data
         public string Name { get; set; }
         [Required]
         public string Module { get; set; }
+        [Required]
+        public string Version { get; set; }
         public bool Connected { get; set; }
-        public string Endpoint { get; set; }
+        public string EndPoint { get; set; }
         public DateTime LastAccessTime { get; set; }
         public DateTime ConfigTime { get; set; }
     }

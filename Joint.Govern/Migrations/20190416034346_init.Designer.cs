@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Joint.Govern.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20190411093625_init")]
+    [Migration("20190416034346_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,7 +98,7 @@ namespace Joint.Govern.Migrations
 
                     b.Property<bool>("Connected");
 
-                    b.Property<string>("Endpoint");
+                    b.Property<string>("EndPoint");
 
                     b.Property<DateTime>("LastAccessTime");
 
@@ -106,6 +106,9 @@ namespace Joint.Govern.Migrations
                         .IsRequired();
 
                     b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<string>("Version")
                         .IsRequired();
 
                     b.HasKey("ModuleInstanceId");

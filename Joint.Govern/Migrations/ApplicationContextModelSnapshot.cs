@@ -96,7 +96,7 @@ namespace Joint.Govern.Migrations
 
                     b.Property<bool>("Connected");
 
-                    b.Property<string>("Endpoint");
+                    b.Property<string>("EndPoint");
 
                     b.Property<DateTime>("LastAccessTime");
 
@@ -104,6 +104,9 @@ namespace Joint.Govern.Migrations
                         .IsRequired();
 
                     b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<string>("Version")
                         .IsRequired();
 
                     b.HasKey("ModuleInstanceId");

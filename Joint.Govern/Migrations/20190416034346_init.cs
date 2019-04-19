@@ -63,8 +63,9 @@ namespace Joint.Govern.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(nullable: false),
                     Module = table.Column<string>(nullable: false),
+                    Version = table.Column<string>(nullable: false),
                     Connected = table.Column<bool>(nullable: false),
-                    Endpoint = table.Column<string>(nullable: true),
+                    EndPoint = table.Column<string>(nullable: true),
                     LastAccessTime = table.Column<DateTime>(nullable: false),
                     ConfigTime = table.Column<DateTime>(nullable: false)
                 },
